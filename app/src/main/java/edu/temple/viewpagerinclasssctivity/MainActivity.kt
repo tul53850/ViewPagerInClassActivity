@@ -9,7 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 
 class MainActivity : AppCompatActivity() {
 
-    val newButton : Button by lazy {
+    val newButton : Button by lazy { //dont create object till needed... lazyyyyy
         findViewById(R.id.button)
     }
 
@@ -17,15 +17,23 @@ class MainActivity : AppCompatActivity() {
         findViewById(R.id.viewPager)
     }
 
+    var numberOfFragments = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         viewPager.adapter = object: FragmentStateAdapter(this) {
-            override fun getItemCount() = 10
+            override fun getItemCount() = numberOfFragments
 
             override fun createFragment(position: Int) = TextFragment.newInstance((position + 1).toString())
 
+        }
+
+        newButton.setOnClickListener{
+            numberOfFragments++
+            (viewPager.adapter as FragmentStateAdapter).notifyDataSetChanged()
+            viewPager.setCurrentItem(numberOfFragments-1, true)
         }
 
     }
